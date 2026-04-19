@@ -1,3 +1,5 @@
+<img src="images/jatayu.jpg" align="left" width="220" hspace="16" vspace="8" alt="Jatayu" />
+
 # Jatayu
 ### A first party personal agent that leverages your existing Claude CLI subscription
 
@@ -5,6 +7,8 @@ A personal AI assistant that runs as a Claude Code session and
 communicates via iMessage. Answers questions, manages reminders, checks
 calendar/email, and acts on behalf of the Owner and their family. Uses
 the Claude CLI directly, so nothing here violates Claude's usage policy.
+
+<br clear="left" />
 
 **macOS only.** Jatayu reads iMessage's local `chat.db` and sends via
 AppleScript to Messages.app, so it runs on the Mac where you're signed
