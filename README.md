@@ -142,6 +142,11 @@ Set reminders via iMessage:
 Stored in `tasks/pending.json`; fired by `scripts/heartbeat.py` every
 5 minutes. See [scheduling.md](docs/scheduling.md) for details.
 
+## Current Limitations
+
+- Jatayu runs with your iMessage ID, which means you need to text yourself to talk (which duplicates messages)
+- To avoid duplicates, use imessage groups (but that really only works if you add someone else)
+
 ## Top-level layout
 
 ```
