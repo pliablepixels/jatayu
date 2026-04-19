@@ -20,6 +20,15 @@
             "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/check-imessage-reply.py\""
           }
         ]
+      },
+      {
+        "matcher": "Bash|mcp__imessage__reply",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/check-trust-tier.py\""
+          }
+        ]
       }
     ],
     "SessionStart": [

@@ -105,6 +105,10 @@ print('<array>' + ''.join(entries) + '</array>')
       -e "s|__PATH__|$PATH|g" \
       -e "s|__START_CALENDAR_INTERVAL__|$START_CALENDAR_INTERVAL|g" \
       "$PLIST_TEMPLATE" > "$PLIST_DEST"
+  # Owner-readable only — plist paths reveal home dir layout and agent
+  # config, and a world-readable LaunchAgent file lets any local user on
+  # a multi-user box inspect Jatayu's runtime surface.
+  chmod 600 "$PLIST_DEST"
   launchctl unload "$PLIST_DEST" 2>/dev/null || true
   launchctl load "$PLIST_DEST" && pass "launchd heartbeat agent loaded (every 5 min)"
 else

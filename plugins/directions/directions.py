@@ -53,23 +53,29 @@ def get_directions(origin: str, destination: str, waypoint: str = None) -> str:
     if data.get("status") != "OK":
         return f"Directions error: {data.get('status')} — {data.get('error_message', '')}"
 
-    route = data["routes"][0]
-    leg = route["legs"][0]
+    routes = data.get("routes") or []
+    if not routes:
+        return "Directions error: no routes in response"
+    route = routes[0]
+    legs = route.get("legs") or []
+    if not legs:
+        return "Directions error: route has no legs"
+    leg = legs[0]
 
-    distance = leg["distance"]["text"]
-    duration = leg["duration"]["text"]
-    duration_traffic = leg.get("duration_in_traffic", {}).get("text", duration)
+    distance = (leg.get("distance") or {}).get("text", "?")
+    duration = (leg.get("duration") or {}).get("text", "?")
+    duration_traffic = (leg.get("duration_in_traffic") or {}).get("text", duration)
     via = route.get("summary", "")
 
     delay_sec = (
-        leg.get("duration_in_traffic", {}).get("value", 0)
-        - leg["duration"]["value"]
+        (leg.get("duration_in_traffic") or {}).get("value", 0)
+        - (leg.get("duration") or {}).get("value", 0)
     )
     delay_min = round(delay_sec / 60)
 
     lines = [
-        f"From: {leg['start_address']}",
-        f"To:   {leg['end_address']}",
+        f"From: {leg.get('start_address', '?')}",
+        f"To:   {leg.get('end_address', '?')}",
         f"Distance: {distance}",
     ]
 

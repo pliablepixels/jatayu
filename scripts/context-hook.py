@@ -217,9 +217,13 @@ def cmd_read() -> int:
         "</delivery>"
     )
 
-    # Stamp who triggered this turn so PreToolUse hooks (e.g. the Boundary
-    # #8 check on mcp__imessage__reply) can tell whether the request came
-    # from the Owner vs. a family member in the same group chat.
+    # Stamp who triggered this turn so PreToolUse hooks (Boundary #8 reply
+    # check, trust-tier gate) can tell whether the request came from the
+    # Owner vs. a family member in the same group chat. Per-chat files
+    # keyed by chat_id avoid a race where chat B's turn overwrites chat
+    # A's stamp between the hook and a tool call still attributed to A.
+    # `latest-turn.json` is kept for callers that need "what was the most
+    # recent turn anywhere" (e.g. trust-tier gate for a Bash dispatch).
     user = _extract_user(prompt)
     if user:
         CONTEXT_DIR.mkdir(parents=True, exist_ok=True)
@@ -228,9 +232,15 @@ def cmd_read() -> int:
             "user": user,
             "ts": local_now,
         }
-        tmp = CONTEXT_DIR / "latest-turn.json.tmp"
-        tmp.write_text(json.dumps(latest))
-        os.replace(tmp, CONTEXT_DIR / "latest-turn.json")
+        blob = json.dumps(latest)
+        safe_key = re.sub(r"[^\w\-+]", "_", chat_key)
+        for target in (
+            CONTEXT_DIR / "latest-turn.json",
+            CONTEXT_DIR / f"latest-turn-{safe_key}.json",
+        ):
+            tmp = target.with_suffix(target.suffix + ".tmp")
+            tmp.write_text(blob)
+            os.replace(tmp, target)
 
     chat_path = _chat_path(chat_key)
     summary_path = _summary_path(chat_path)

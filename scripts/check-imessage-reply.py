@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -27,7 +28,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from personal import load  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-LATEST_TURN = ROOT / "tasks" / "context" / "latest-turn.json"
+CONTEXT_DIR = ROOT / "tasks" / "context"
+
+
+def _latest_turn_path_for(chat_id: str) -> Path:
+    """Per-chat stamp written by context-hook.py. Prevents a concurrent
+    turn in another chat from overwriting the requester identity this
+    hook relies on for the Owner-attribution check."""
+    # Mirrors context-hook._chat_path sanitisation so the filenames line up.
+    # chat_key format there is "<source>_<chat_id>"; the hook writes per-chat
+    # files as latest-turn-<sanitised-chat_key>.json. We scan for any file
+    # whose stamped chat_id matches this reply's target.
+    safe = re.sub(r"[^\w\-+]", "_", chat_id)
+    # Fallback ordering: exact per-chat match first, then global as last resort.
+    return CONTEXT_DIR / f"latest-turn-plugin_imessage_imessage_{safe}.json"
 
 
 def _owner_handles(owner: dict) -> set[str]:
@@ -39,13 +53,21 @@ def _owner_handles(owner: dict) -> set[str]:
     return out
 
 
-def _load_latest_turn() -> dict | None:
-    if not LATEST_TURN.exists():
-        return None
-    try:
-        return json.loads(LATEST_TURN.read_text())
-    except (OSError, json.JSONDecodeError):
-        return None
+def _load_latest_turn(chat_id: str) -> dict | None:
+    candidates = [
+        _latest_turn_path_for(chat_id),
+        CONTEXT_DIR / "latest-turn.json",
+    ]
+    for path in candidates:
+        if not path.exists():
+            continue
+        try:
+            data = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        if data.get("chat_id") == chat_id:
+            return data
+    return None
 
 
 def _block(chat_id: str, hits: list[str], reason: str) -> None:
@@ -88,7 +110,9 @@ def main() -> int:
         return 0
 
     try:
-        docs_real = Path(docs_dir).expanduser().resolve(strict=False)
+        # strict=True resolves all symlinks in the chain; fail-closed if
+        # the docs dir is missing so we never fall through to "no hits".
+        docs_real = Path(docs_dir).expanduser().resolve(strict=True)
     except Exception:
         return 0
 
@@ -97,7 +121,11 @@ def main() -> int:
         if not isinstance(f, str):
             continue
         try:
-            real = Path(f).expanduser().resolve(strict=False)
+            # strict=True: a symlink pointing outside docs_real resolves to
+            # its real target here, and relative_to() below will correctly
+            # reject it. strict=False would leave the symlink unresolved
+            # and a crafted path could slip past.
+            real = Path(f).expanduser().resolve(strict=True)
         except Exception:
             continue
         try:
@@ -115,7 +143,7 @@ def main() -> int:
 
     # Otherwise: allow only when the *current turn* was triggered by the
     # Owner's iMessage handle.
-    turn = _load_latest_turn()
+    turn = _load_latest_turn(chat_id)
     owner_handles = _owner_handles(owner)
     if turn and turn.get("chat_id") == chat_id:
         asker = (turn.get("user") or "").strip().lower()
