@@ -1,0 +1,9 @@
+PERSONAL.md
+PERSONAL.yaml
+.claude/scheduled_tasks.lock
+node_modules/
+__pycache__/
+*.pyc
+tasks/
+memory/
+framework/registry.json

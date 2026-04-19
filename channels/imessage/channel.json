@@ -1,0 +1,8 @@
+{
+  "name": "imessage",
+  "description": "Apple iMessage via the Claude iMessage plugin",
+  "plugin": "server:imessage",
+  "source_tag": "server:imessage",
+  "reply_tool": "mcp__imessage__reply",
+  "reply_param": "text"
+}

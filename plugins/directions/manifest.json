@@ -1,0 +1,44 @@
+{
+  "name": "directions",
+  "description": "Get driving directions and real-time traffic conditions using Google Maps",
+  "version": "1.0",
+  "env": {
+    "GOOGLE_MAPS_API": {
+      "required": true,
+      "purpose": "Google Maps Directions API key"
+    }
+  },
+  "required_capabilities": [
+    "network:maps.googleapis.com",
+    "env:GOOGLE_MAPS_API"
+  ],
+  "intents": [
+    {
+      "name": "driving_directions",
+      "description": "Get driving directions, travel time with live traffic, distance, and route summary between two locations",
+      "examples": [
+        "how do I get to the airport?",
+        "directions from home to downtown",
+        "how long to drive to <place>?",
+        "what's traffic like to work?",
+        "how far is it to the mall?",
+        "what's the best route to the office?",
+        "how's the traffic?",
+        "what's traffic like?",
+        "how's the drive?",
+        "is traffic bad right now?",
+        "how long to get home?",
+        "how long to get to work?"
+      ],
+      "args": {
+        "origin": "Starting location (address or place name). If unspecified: before 9am use Owner's home address, after 9am use Owner's office address — both from PERSONAL.yaml.",
+        "destination": "Destination location (address or place name). If unspecified: before 9am use Owner's office address, after 9am use Owner's home address — both from PERSONAL.yaml.",
+        "waypoint": "Optional via waypoint (forces route through this point)."
+      },
+      "invoke": ["python3", "plugins/directions/directions.py"]
+    }
+  ],
+  "lifecycle": {
+    "setup": "bash plugins/directions/setup.sh"
+  }
+}

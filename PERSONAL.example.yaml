@@ -1,0 +1,40 @@
+# Copy to PERSONAL.yaml (gitignored) and fill in real values.
+# scripts/personal.py is the single parser — all other tooling imports from it.
+
+bot:
+  name: <BotName>          # e.g. "Aria"
+  aliases: []              # other names the bot answers to in group chats
+  signature: "<BotName>, <Owner>'s PA"
+
+owner:
+  name: <Name>
+  email: user@example.com
+  phone: "+1XXXXXXXXXX"
+  home_address: "<Street>, <City> <State> <Zip>, Country"
+  office_address: "<Street>, <City> <State> <Zip>"
+  primary_chat_guid: "any;-;+1XXXXXXXXXX"
+  personal_docs_dir: /Users/<user>/personal
+
+services:
+  calendar: "<your calendar service — e.g. a native calendar app via AppleScript>"
+  shared_calendar: "<shared calendar name>"
+  email: "<your email service — e.g. a cloud mail provider via MCP plugin>"
+  messaging: "<your messaging service — e.g. iMessage via the imessage plugin>"
+
+paths:
+  pending_tasks: /absolute/path/to/jatayu/tasks/pending.json
+
+family:
+  - name: <Name>
+    relation: <relation — e.g. spouse, parent, child>
+    phone: "+1XXXXXXXXXX"
+
+friends: []
+
+# Optional: known group chats. Keys are the iMessage chat_id
+# (e.g. "any;+;chat<hash>") obtained from chat.db. Unlisted groups are
+# classified as `unknown_group` and get the pairing response.
+groups: {}
+  # "any;+;chat1234567890abcdef":
+  #   name: "Family group"
+  #   tier: family_group

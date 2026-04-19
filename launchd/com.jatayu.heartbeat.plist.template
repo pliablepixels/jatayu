@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  launchd agent for Jatayu scheduled reminders.
+  Rendered by setup.sh into ~/Library/LaunchAgents/ with the repo path,
+  HOME, and PATH substituted. Do not edit the rendered copy directly.
+  Fires at clean minute boundaries (:00, :05, :10 ...) derived from
+  PERSONAL.yaml heartbeat.interval_seconds (default 300 s / 5 min).
+  Uses StartCalendarInterval so firing is clock-aligned, not load-relative.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.jatayu.heartbeat</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>__REPO__/scripts/heartbeat.py</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    __START_CALENDAR_INTERVAL__
+
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>__PATH__</string>
+        <key>HOME</key>
+        <string>__HOME__</string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>__REPO__/tasks/heartbeat.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__REPO__/tasks/heartbeat.log</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>

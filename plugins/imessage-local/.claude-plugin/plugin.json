@@ -1,0 +1,11 @@
+{
+  "name": "imessage-local",
+  "description": "Local fork of the iMessage channel — adds opt-in outgoing-message delivery for configured chats and self-chat DMs.",
+  "version": "0.1.0",
+  "keywords": [
+    "imessage",
+    "messaging",
+    "channel",
+    "mcp"
+  ]
+}

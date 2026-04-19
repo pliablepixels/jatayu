@@ -1,0 +1,37 @@
+{
+  "name": "weather",
+  "description": "Current conditions and short-range forecast via Open-Meteo (free, no API key)",
+  "version": "1.0",
+  "required_capabilities": [
+    "network:api.open-meteo.com",
+    "network:geocoding-api.open-meteo.com"
+  ],
+  "intents": [
+    {
+      "name": "current_and_forecast",
+      "description": "Current weather and a multi-day forecast for a location",
+      "examples": [
+        "what's the weather?",
+        "what's it like outside?",
+        "is it going to rain today?",
+        "how hot will it be today?",
+        "weather in <city>",
+        "weather at the office",
+        "forecast for tomorrow",
+        "will it snow this weekend?",
+        "should I bring a jacket?",
+        "will it rain during the commute?",
+        "what's the high today?",
+        "is it cold outside?"
+      ],
+      "args": {
+        "location": "Place name or address. If unspecified, use the Owner's home_address from PERSONAL.yaml.",
+        "days": "Number of forecast days (1-7, default 3). Pass fewer for quick 'right now' answers, more for weekend-planning questions."
+      },
+      "invoke": ["python3", "plugins/weather/weather.py"]
+    }
+  ],
+  "lifecycle": {
+    "setup": "bash plugins/weather/setup.sh"
+  }
+}
