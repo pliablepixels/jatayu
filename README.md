@@ -1,8 +1,8 @@
-<img src="images/jatayu.jpg" align="left" width="220" hspace="16" vspace="8" alt="Jatayu" />
 
 # Jatayu
 ### A first party personal agent that leverages your existing Claude CLI subscription
 
+<img src="images/jatayu.jpg" align="left" width="220" hspace="16" vspace="8" alt="Jatayu" />
 A personal AI assistant that runs as a Claude Code session and
 communicates via iMessage. Answers questions, manages reminders, checks
 calendar/email, and acts on behalf of the Owner and their family. Uses
