@@ -8,6 +8,15 @@ communicates via iMessage. Answers questions, manages reminders, checks
 calendar/email, and acts on behalf of the Owner and their family. Uses
 the Claude CLI directly, so nothing here violates Claude's usage policy.
 
+### Who is Jatayu?
+
+Jatayu is the pen name of [Lalmohan Ganguly](https://en.wikipedia.org/wiki/Lalmohan_Ganguly) — the devoted, ever-enthusiastic
+sidekick to [Feluda](https://en.wikipedia.org/wiki/Feluda), Satyajit Ray's fictional detective. He tags along on every
+case, means well, occasionally fumbles, but is completely loyal and always shows
+up. A personal assistant that handles your calendar, email, and messages felt
+like exactly his energy.
+
+
 <br clear="left" />
 
 **macOS only.** Jatayu reads iMessage's local `chat.db` and sends via
@@ -20,14 +29,6 @@ iMessage — there's no SMS, WhatsApp, web, or voice interface yet. The
 architecture is channel-agnostic (see [`docs/channels.md`](docs/channels.md)),
 but the only channel currently shipped is the vendored iMessage MCP
 server in `plugins/imessage-local/`.
-
-### Who is Jatayu?
-
-Jatayu is the pen name of [Lalmohan Ganguly](https://en.wikipedia.org/wiki/Lalmohan_Ganguly) — the devoted, ever-enthusiastic
-sidekick to [Feluda](https://en.wikipedia.org/wiki/Feluda), Satyajit Ray's fictional detective. He tags along on every
-case, means well, occasionally fumbles, but is completely loyal and always shows
-up. A personal assistant that handles your calendar, email, and messages felt
-like exactly his energy.
 
 ## Prerequisites
 
