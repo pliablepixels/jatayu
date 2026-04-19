@@ -19,6 +19,8 @@ like exactly his energy.
 
 <br clear="left" />
 
+**Inspired by OpenClaw** Jatayu is inspired by OpenClaw. I ran it for a while and then removed it - too many things to validate/check for problems. I wanted to do a smaller one, that does what I need it to and I can incrementally build on. I borrowed the core concepts of heartbeat and plugins, obviously. I also did not want to add a platform API cost on top of my Claude max cost so really wanted the agent to comply to Claude's first party usage rules.
+
 **macOS only.** Jatayu reads iMessage's local `chat.db` and sends via
 AppleScript to Messages.app, so it runs on the Mac where you're signed
 into iMessage.
