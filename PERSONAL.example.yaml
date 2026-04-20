@@ -2,7 +2,9 @@
 # scripts/personal.py is the single parser — all other tooling imports from it.
 
 bot:
-  name: <BotName>          # e.g. "Aria"
+  name: <BotName>          # e.g. "Aria" — if keeping "Jatayu", see PERSONALITY.md: the bot
+                           # should explain the name as the pen name of Lalmohan Ganguly,
+                           # Feluda's sidekick in Satyajit Ray's detective stories.
   aliases: []              # other names the bot answers to in group chats
   signature: "<BotName>, <Owner>'s PA"
 

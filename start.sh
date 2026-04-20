@@ -42,12 +42,13 @@ export JATAYU_TMUX_SESSION="jatayu"
 CHANNELS=$(cat "$DIR/framework/.channels")
 
 # Inline MCP config — registers the forked iMessage server under the plain name
-# "imessage" so the channel tag "server:imessage" resolves. Built from $DIR at
-# launch time so no absolute path is ever checked in.
-MCP_CONFIG=$(cat <<EOF
-{"mcpServers":{"imessage":{"command":"bun","args":["run","--cwd","$DIR/plugins/imessage-local","--silent","start"]}}}
-EOF
-)
+# "imessage" so the channel tag "server:imessage" resolves. Built via python3
+# so $DIR is JSON-encoded regardless of special characters in the path.
+MCP_CONFIG=$(python3 -c "
+import json, sys
+cwd = sys.argv[1]
+print(json.dumps({'mcpServers': {'imessage': {'command': 'bun', 'args': ['run', '--cwd', cwd, '--silent', 'start']}}}))
+" "$DIR/plugins/imessage-local")
 
 # --dangerously-skip-permissions: tool auto-approval for this trusted session.
 # --mcp-config: starts the forked iMessage MCP server under name "imessage".

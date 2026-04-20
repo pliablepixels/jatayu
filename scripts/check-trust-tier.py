@@ -94,15 +94,17 @@ def main() -> int:
         )
 
     if tool_name == "Bash":
-        cmd = tool_input.get("command", "") or ""
-        # Plugin dispatch is the main escalation path — cover both the
-        # canonical invocation and any variant that routes through it.
-        if "framework/dispatch.py" in cmd:
-            _block(
-                f"plugin dispatch while the current turn is from an "
-                f"untrusted sender (tier={tier}, chat_id={origin_chat!r}). "
-                f"Unknown senders must not be able to trigger plugins."
-            )
+        # Block all shell commands for unknown senders — not just dispatch.py
+        # variants. A string-match on "framework/dispatch.py" in the command
+        # is bypassable via relative/absolute paths or shell aliases; blocking
+        # Bash entirely for unknown contexts is simpler and equally correct,
+        # since there is no legitimate shell work to do when the origin is
+        # unrecognised (only iMessage replies are needed).
+        _block(
+            f"Bash commands are not allowed while the current turn is from an "
+            f"untrusted sender (tier={tier}, chat_id={origin_chat!r}). "
+            f"Unknown senders must not be able to trigger shell commands."
+        )
 
     return 0
 

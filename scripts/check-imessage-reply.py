@@ -32,13 +32,12 @@ CONTEXT_DIR = ROOT / "tasks" / "context"
 
 
 def _latest_turn_path_for(chat_id: str) -> Path:
-    """Per-chat stamp written by context-hook.py. Prevents a concurrent
-    turn in another chat from overwriting the requester identity this
-    hook relies on for the Owner-attribution check."""
-    # Mirrors context-hook._chat_path sanitisation so the filenames line up.
-    # chat_key format there is "<source>_<chat_id>"; the hook writes per-chat
-    # files as latest-turn-<sanitised-chat_key>.json. We scan for any file
-    # whose stamped chat_id matches this reply's target.
+    """Return the expected per-chat latest-turn stamp path for chat_id.
+
+    Mirrors context-hook._chat_path sanitisation so filenames line up:
+    chat_key is "<source>_<chat_id>"; per-chat stamps are written as
+    latest-turn-<sanitised-chat_key>.json by context-hook.py.
+    """
     safe = re.sub(r"[^\w\-+]", "_", chat_id)
     # Fallback ordering: exact per-chat match first, then global as last resort.
     return CONTEXT_DIR / f"latest-turn-plugin_imessage_imessage_{safe}.json"
