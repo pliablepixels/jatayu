@@ -39,7 +39,7 @@ export IMESSAGE_OWNER_SIGNATURE="$(python3 "$DIR/scripts/personal.py" signature 
 # Single tmux session name shared with scripts/trigger.py (heartbeat, webhooks).
 export JATAYU_TMUX_SESSION="jatayu"
 
-CHANNELS=$(cat "$DIR/framework/.channels")
+CHANNELS=$(cat "$DIR/framework/autogen-channels")
 
 # Inline MCP config — registers the forked iMessage server under the plain name
 # "imessage" so the channel tag "server:imessage" resolves. Built via python3

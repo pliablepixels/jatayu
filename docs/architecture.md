@@ -61,7 +61,7 @@ Side channels:
 1. **iMessage MCP server** delivers `<channel source="plugin:imessage:imessage" chat_id="..." message_id="..." user="..." ts="...">body</channel>`.
 2. **UserPromptSubmit** hooks fire in this order:
    - `context-hook.py read` — parses the channel tag, emits `<local-time>`, `<trust>` (resolved by `scripts/trust.py`), `<prior-summary>` if the chat has been compacted, and up to 20 recent turns as `<prior-context>`.
-   - `preclassify.py` — keyword-matches the prompt against intents in `framework/registry.json`; if one dominates, prints `<route plugin="..." intent="..." confidence="..."/>`. Hint only.
+   - `preclassify.py` — keyword-matches the prompt against intents in `framework/autogen-registry.json`; if one dominates, prints `<route plugin="..." intent="..." confidence="..."/>`. Hint only.
 3. **Claude** reads the boundaries in CLAUDE.md, the trust tier, the
    channel rules, the suggested route, and decides what to do. If a
    plugin matches, it calls `framework/dispatch.py <plugin> <intent> '<args-json>'`.
@@ -101,9 +101,9 @@ framework/
   dispatch.py             safe, shell-free plugin invoker
   build-registry.py       merges plugin manifests + channel defs
   loader.sh               orchestrates build + per-plugin setup
-  registry.json           generated (gitignored)
-  channel-rules.md        generated — concatenated channel.md files
-  .channels               generated — comma-separated channel plugin list
+  autogen-registry.json           generated (gitignored)
+  autogen-channel-rules.md        generated — concatenated channel.md files
+  autogen-channels        generated — comma-separated channel plugin list
 
 plugins/<name>/
   manifest.json           intent/arg/env/capabilities declaration
@@ -112,7 +112,7 @@ plugins/<name>/
 
 channels/<name>/
   channel.json            reply_tool / reply_param / source_tag
-  channel.md              behavioral rules (merged into channel-rules.md)
+  channel.md              behavioral rules (merged into autogen-channel-rules.md)
 
 scripts/
   personal.py             PERSONAL.yaml parser (single source of truth)
@@ -152,7 +152,7 @@ launchd/                  launchd plist templates (rendered by setup.sh)
 | Routing a new plugin match | `scripts/preclassify.py`              |
 | Calling a plugin safely    | `framework/dispatch.py`               |
 | Plugin discovery           | `framework/build-registry.py`         |
-| Channel rules              | `channels/*/channel.md` → `framework/channel-rules.md` |
+| Channel rules              | `channels/*/channel.md` → `framework/autogen-channel-rules.md` |
 | Scheduled tasks            | `scripts/heartbeat.py` + `tasks/pending.json` |
 | Any prompt injection into  | `scripts/trigger.py` (heartbeat + future webhooks) |
 | the live session           |                                       |

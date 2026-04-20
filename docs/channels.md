@@ -11,7 +11,7 @@ server, not the framework.
 ```
 channels/<name>/
   channel.json      how the framework sees the channel
-  channel.md        behavioral rules (merged into channel-rules.md)
+  channel.md        behavioral rules (merged into autogen-channel-rules.md)
 ```
 
 ## channel.json schema
@@ -40,7 +40,7 @@ channels/<name>/
 
 Behavioral rules specific to this channel. On every start,
 `build-registry.py` concatenates all `channels/*/channel.md` into
-`framework/channel-rules.md`, which `CLAUDE.md` @-imports. Rules apply
+`framework/autogen-channel-rules.md`, which `CLAUDE.md` @-imports. Rules apply
 when the `<channel source="…">` tag matches.
 
 Keep rules to behavior that's *specific to the channel* — identity,

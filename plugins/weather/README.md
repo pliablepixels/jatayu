@@ -52,5 +52,5 @@ private assistant.
 ## Disabling
 
 Remove the plugin directory (`rm -rf plugins/weather/`) and restart.
-`framework/build-registry.py` rebuilds `framework/registry.json` on
+`framework/build-registry.py` rebuilds `framework/autogen-registry.json` on
 every launch.

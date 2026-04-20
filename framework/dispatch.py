@@ -33,7 +33,7 @@ SCALAR_TYPES = (str, int, float, bool)
 
 
 def load_registry() -> dict:
-    with open(ROOT / "framework" / "registry.json") as f:
+    with open(ROOT / "framework" / "autogen-registry.json") as f:
         return json.load(f)
 
 

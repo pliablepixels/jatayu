@@ -1,5 +1,5 @@
 #!/bin/bash
-# loader.sh — Discovers plugins and builds framework/registry.json.
+# loader.sh — Discovers plugins and builds framework/autogen-registry.json.
 # Called by start.sh on every bot launch.
 
 set -e

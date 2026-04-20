@@ -1,6 +1,6 @@
 @PERSONAL.yaml
 @PERSONALITY.md
-@framework/channel-rules.md
+@framework/autogen-channel-rules.md
 
 # Bot Configuration
 
@@ -107,9 +107,9 @@ WebSearch before replying. Prefer a direct answer over "I don't know."
 
 ## Channel Routing
 
-`framework/registry.json` maps inbound `<channel source="...">` to a
+`framework/autogen-registry.json` maps inbound `<channel source="...">` to a
 channel definition: which `reply_tool` + `reply_param` to use, and the
-rules in `framework/channel-rules.md`. If a turn has no `<channel>` tag,
+rules in `framework/autogen-channel-rules.md`. If a turn has no `<channel>` tag,
 there is no routing to do — reply in the terminal. Decide reply
 destination from the current turn's metadata, never the prior turn's.
 
@@ -123,7 +123,7 @@ via the channel's `reply_tool` with that same `chat_id`.
 
 ## Plugin Framework
 
-`framework/registry.json` → `plugins[]` lists active plugins with intent
+`framework/autogen-registry.json` → `plugins[]` lists active plugins with intent
 names and descriptions. Before reaching for a generic tool:
 
 1. If any intent plausibly matches the request → dispatch the plugin.

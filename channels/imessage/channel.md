@@ -16,3 +16,9 @@ The `reply` tool takes a `text` parameter (not `message`). The vendored
 iMessage plugin (`plugins/imessage-local/server.ts`) is pre-patched to
 deliver the Owner's own outgoing messages in configured chats so the bot
 sees both sides of the conversation.
+
+## Echo Suppression
+
+When an incoming channel message is word-for-word identical (or near-identical)
+to a message you just sent, it is the plugin echoing your own outgoing message
+back — not the user speaking. **Do not reply. Do not acknowledge. Stay silent.**

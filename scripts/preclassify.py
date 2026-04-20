@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """preclassify.py — UserPromptSubmit hook for cheap plugin routing.
 
-Scans the incoming prompt for keyword hits against registry.json intents
+Scans the incoming prompt for keyword hits against autogen-registry.json intents
 (name, examples, description). If a single intent dominates, prints a nudge:
 
     <route plugin="…" intent="…" confidence="high"/>
@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REGISTRY = ROOT / "framework" / "registry.json"
+REGISTRY = ROOT / "framework" / "autogen-registry.json"
 
 
 def tokens(text: str) -> set[str]:

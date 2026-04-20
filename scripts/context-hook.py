@@ -212,7 +212,7 @@ def cmd_read() -> int:
     print(f"<trust {attrs}/>")
 
     # Hard reminder: replies must go through the channel's reply tool, not
-    # stdout. CLAUDE.md + framework/channel-rules.md say this, but a prose
+    # stdout. CLAUDE.md + framework/autogen-channel-rules.md say this, but a prose
     # rule in a session-start doc is easy to drift from. Repeating it per
     # turn keeps it front-of-mind.
     print(

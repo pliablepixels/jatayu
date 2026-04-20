@@ -6,4 +6,6 @@ __pycache__/
 *.pyc
 tasks/
 memory/
-framework/registry.json
+framework/autogen-registry.json
+framework/autogen-channels
+framework/autogen-channel-rules.md

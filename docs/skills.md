@@ -14,7 +14,7 @@ Two extension points, different jobs — pick the right one.
 | **What it is** | Words the model reads           | A process the model invokes           |
 | **Runs?**      | No                              | Yes (argv via dispatch.py)            |
 | **Good for**   | Access rules, lookup order, response format, decision trees | Fetching data, calling APIs, running shell commands |
-| **Triggers**   | Invoked via the `Skill` tool when the model recognizes a match from the skill's description | Invoked when Claude matches an intent in `registry.json` |
+| **Triggers**   | Invoked via the `Skill` tool when the model recognizes a match from the skill's description | Invoked when Claude matches an intent in `autogen-registry.json` |
 | **Example**    | `calendar` — tells the bot to check Apple Calendar before Gmail for flight questions | `directions` — actually calls Google Maps Directions API |
 
 **Rule of thumb**: if the extension needs the network, a secret, or the
