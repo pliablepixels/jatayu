@@ -17,6 +17,10 @@ iMessage plugin (`plugins/imessage-local/server.ts`) is pre-patched to
 deliver the Owner's own outgoing messages in configured chats so the bot
 sees both sides of the conversation.
 
+## Formatting
+
+Never use markdown in iMessage replies. Plain text only — no bold, no bullets with **, no headers. iMessage renders markdown as literal characters, not formatting.
+
 ## Echo Suppression
 
 When an incoming channel message is word-for-word identical (or near-identical)
