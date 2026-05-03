@@ -138,17 +138,6 @@ type Row = {
 
 const qWatermark = db.query<{ max: number | null }, []>('SELECT MAX(ROWID) AS max FROM message')
 
-const qPoll = db.query<Row, [number]>(`
-  SELECT m.ROWID AS rowid, m.guid, m.text, m.attributedBody, m.date, m.is_from_me,
-         m.cache_has_attachments, m.service, h.id AS handle_id, c.guid AS chat_guid, c.style AS chat_style
-  FROM message m
-  JOIN chat_message_join cmj ON cmj.message_id = m.ROWID
-  JOIN chat c ON c.ROWID = cmj.chat_id
-  LEFT JOIN handle h ON h.ROWID = m.handle_id
-  WHERE m.ROWID > ?
-  ORDER BY m.ROWID ASC
-`)
-
 const qHistory = db.query<Row, [string, number]>(`
   SELECT m.ROWID AS rowid, m.guid, m.text, m.attributedBody, m.date, m.is_from_me,
          m.cache_has_attachments, m.service, h.id AS handle_id, c.guid AS chat_guid, c.style AS chat_style
@@ -798,18 +787,44 @@ const deliveredGuids = new Set<string>()
 // Secondary dedup: same sender+text+date catches multi-chat-record dupes with different GUIDs.
 const deliveredContent = new Map<string, number>()
 
+// Built per-tick because the IN arity tracks the live allowlist. Pairing mode
+// adds the style-45 carve-out so unknown DMs can still reach the gate.
+function qPoll(after: number, allowed: string[], includeNewDMs: boolean): Row[] {
+  if (allowed.length === 0 && !includeNewDMs) return []
+  const placeholders = allowed.map(() => '?').join(',')
+  const scope =
+    allowed.length > 0 && includeNewDMs ? `(c.guid IN (${placeholders}) OR c.style = 45)`
+    : allowed.length > 0 ? `c.guid IN (${placeholders})`
+    : `c.style = 45`
+  return db.query<Row, (number | string)[]>(`
+    SELECT m.ROWID AS rowid, m.guid, m.text, m.attributedBody, m.date, m.is_from_me,
+           m.cache_has_attachments, m.service, h.id AS handle_id, c.guid AS chat_guid, c.style AS chat_style
+    FROM message m
+    JOIN chat_message_join cmj ON cmj.message_id = m.ROWID
+    JOIN chat c ON c.ROWID = cmj.chat_id
+    LEFT JOIN handle h ON h.ROWID = m.handle_id
+    WHERE m.ROWID > ? AND ${scope}
+    ORDER BY m.ROWID ASC
+  `).all(after, ...allowed)
+}
+
 function poll(): void {
+  // Bound the scan up front so watermark always advances past rows the SQL
+  // filter excludes — otherwise filtered rowids would be re-scanned forever.
+  const maxRow = qWatermark.get()?.max ?? watermark
+  if (maxRow <= watermark) return
+
   let rows: Row[]
   try {
-    rows = qPoll.all(watermark)
+    rows = qPoll(watermark, [...allowedChatGuids()], loadAccess().dmPolicy === 'pairing')
   } catch (err) {
     process.stderr.write(`imessage channel: poll query failed: ${err}\n`)
     return
   }
+
   const now = Date.now()
   for (const [k, t] of deliveredContent) if (now - t > 5000) deliveredContent.delete(k)
   for (const r of rows) {
-    watermark = r.rowid
     if (deliveredGuids.has(r.guid)) continue
     deliveredGuids.add(r.guid)
     const contentKey = `${r.handle_id ?? ''}\x00${(r.text ?? '').slice(0, 120)}\x00${r.date}`
@@ -817,6 +832,7 @@ function poll(): void {
     deliveredContent.set(contentKey, now)
     handleInbound(r)
   }
+  watermark = maxRow
 }
 
 setInterval(poll, 1000).unref()
